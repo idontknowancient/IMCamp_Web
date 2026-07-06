@@ -432,6 +432,25 @@ button {
     min-width: auto;
   }
 
+  .channel-info {
+    margin-top: -2rem;
+    padding-inline: 1rem;
+  }
+
+  .channel-actions {
+    width: 100%;
+  }
+
+  .channel-actions .btn {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .back-to-top {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
   .header-end {
     min-width: auto;
   }
@@ -573,6 +592,25 @@ html[data-theme="light"] .channel-banner {
   letter-spacing: -0.03em;
   line-height: 1.15;
   margin-bottom: 0.5rem;
+  min-height: 1.15em;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  color: var(--accent);
+  font-weight: 400;
+  animation: blink 0.75s step-end infinite;
+}
+
+.typewriter-cursor.is-done {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }
 
 .hero-slogan {
@@ -662,6 +700,35 @@ html[data-theme="light"] .chip.is-active {
   color: var(--bg-elevated);
 }
 
+/* ===== Map ===== */
+.section-map {
+  background: transparent;
+}
+
+.map-container {
+  height: 400px;
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  z-index: 1;
+}
+
+.map-container .leaflet-control-attribution {
+  font-size: 0.625rem;
+  background: color-mix(in srgb, var(--bg-elevated) 90%, transparent);
+  color: var(--text-muted);
+}
+
+.map-container .leaflet-control-attribution a {
+  color: var(--accent);
+}
+
+html:not([data-theme="light"]) .map-container .leaflet-tile-pane {
+  filter: brightness(0.92) contrast(1.05);
+}
+
 /* ===== About ===== */
 .section-about {
   background: transparent;
@@ -672,7 +739,7 @@ html[data-theme="light"] .chip.is-active {
   gap: 1rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .about-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -960,7 +1027,7 @@ html[data-theme="light"] .chip.is-active {
   gap: 1.25rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .footer-inner {
     flex-direction: row;
     flex-wrap: wrap;
@@ -969,7 +1036,8 @@ html[data-theme="light"] .chip.is-active {
     align-items: flex-start;
   }
 
-  .copyright {
+  .copyright,
+  .visitor-count {
     width: 100%;
     text-align: center;
     margin-top: 0.25rem;
@@ -994,7 +1062,7 @@ html[data-theme="light"] .chip.is-active {
   justify-content: center;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .social-list {
     justify-content: flex-end;
   }
@@ -1015,9 +1083,51 @@ html[data-theme="light"] .chip.is-active {
   border-color: transparent;
 }
 
-.copyright {
+.copyright,
+.visitor-count {
   color: var(--text-muted);
   font-size: 0.75rem;
+}
+
+.visitor-count #visit-number {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ===== Back to top ===== */
+.back-to-top {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.75rem);
+  transition: opacity var(--transition), visibility var(--transition),
+    transform var(--transition), background var(--transition);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  filter: brightness(1.08);
+}
+
+.back-to-top .icon {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 /* ===== Reveal on scroll ===== */

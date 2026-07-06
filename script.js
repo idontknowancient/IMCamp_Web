@@ -8,6 +8,11 @@
   const sidebarBackdrop = document.getElementById("sidebar-backdrop");
   const themeToggle = document.getElementById("theme-toggle");
   const yearEl = document.getElementById("year");
+  const backToTop = document.getElementById("back-to-top");
+  const visitNumberEl = document.getElementById("visit-number");
+
+  let leafletMap = null;
+  let mapTileLayer = null;
 
   function getStoredTheme() {
     try {
@@ -44,6 +49,9 @@
         "aria-label",
         theme === "light" ? "切換為深色主題" : "切換為淺色主題"
       );
+    }
+    if (leafletMap) {
+      leafletMap.invalidateSize();
     }
   }
 
@@ -243,6 +251,123 @@
     }
   }
 
+  function initTypewriter() {
+    const el = document.getElementById("typewriter-text");
+    const cursor = document.querySelector(".typewriter-cursor");
+    if (!el) return;
+
+    const text = el.getAttribute("data-text") || "";
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.textContent = text;
+      if (cursor) cursor.classList.add("is-done");
+      return;
+    }
+
+    let index = 0;
+    const delay = 120;
+
+    function typeNext() {
+      if (index < text.length) {
+        el.textContent += text.charAt(index);
+        index += 1;
+        setTimeout(typeNext, delay);
+      } else if (cursor) {
+        cursor.classList.add("is-done");
+      }
+    }
+
+    typeNext();
+  }
+
+  function initVisitorCount() {
+    if (!visitNumberEl) return;
+
+    const apiUrl =
+      "https://api.counterapi.dev/v1/imcamp-portfolio/visits/up";
+
+    fetch(apiUrl)
+      .then(function (res) {
+        if (!res.ok) throw new Error("API error");
+        return res.json();
+      })
+      .then(function (data) {
+        if (typeof data.count === "number") {
+          visitNumberEl.textContent = data.count.toLocaleString("zh-TW");
+        }
+      })
+      .catch(function () {
+        visitNumberEl.textContent = "—";
+      });
+  }
+
+  const OSM_ATTRIBUTION =
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+  function updateMapTiles() {
+    if (!leafletMap || typeof L === "undefined") return;
+
+    if (mapTileLayer) {
+      leafletMap.removeLayer(mapTileLayer);
+    }
+
+    mapTileLayer = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution: OSM_ATTRIBUTION,
+        maxZoom: 19,
+      }
+    ).addTo(leafletMap);
+  }
+
+  function initMap() {
+    const container = document.getElementById("map-container");
+    if (!container || typeof L === "undefined") return;
+
+    const taipei101 = [25.0339, 121.5645];
+
+    leafletMap = L.map(container, {
+      scrollWheelZoom: false,
+    }).setView(taipei101, 14);
+
+    updateMapTiles();
+
+    L.marker(taipei101)
+      .addTo(leafletMap)
+      .bindPopup("<strong>台北 101</strong><br>台北市信義區");
+
+    const mapObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && leafletMap) {
+            leafletMap.invalidateSize();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    mapObserver.observe(container);
+  }
+
+  function initBackToTop() {
+    if (!backToTop) return;
+
+    const showThreshold = 320;
+
+    function updateVisibility() {
+      const shouldShow = window.scrollY > showThreshold;
+      backToTop.hidden = !shouldShow;
+      backToTop.classList.toggle("is-visible", shouldShow);
+    }
+
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    updateVisibility();
+
+    backToTop.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initTheme();
     if (themeToggle) {
@@ -254,5 +379,9 @@
     initScrollSpy();
     initReveal();
     initYear();
+    initTypewriter();
+    initVisitorCount();
+    initMap();
+    initBackToTop();
   });
 })();

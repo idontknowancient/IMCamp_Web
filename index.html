@@ -8,7 +8,19 @@
       content="個人作品集 — 前端開發與 UI 設計"
     />
     <title>中心哲 | Portfolio</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
     <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+      defer
+    ></script>
     <script src="script.js" defer></script>
   </head>
   <body>
@@ -22,7 +34,7 @@
           type="button"
           class="icon-btn menu-toggle"
           id="menu-toggle"
-          aria-expanded="true"
+          aria-expanded="false"
           aria-controls="site-sidebar"
           aria-label="開啟或關閉側邊選單"
         >
@@ -82,6 +94,16 @@
                   <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
                 </svg>
                 <span>首頁</span>
+              </a>
+            </li>
+            <li>
+              <a class="sidebar-link" href="#map" data-nav="map">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                  />
+                </svg>
+                <span>地圖</span>
               </a>
             </li>
             <li>
@@ -175,7 +197,10 @@
             <div class="channel-avatar" aria-hidden="true">你</div>
             <div class="channel-meta">
               <p class="eyebrow">Front-end · UI/UX</p>
-              <h1 class="hero-title">你的名字</h1>
+              <h1 class="hero-title">
+                <span id="typewriter-text" data-text="你的名字"></span
+                ><span class="typewriter-cursor" aria-hidden="true">|</span>
+              </h1>
               <p class="hero-slogan">
                 用程式與設計，把複雜變簡單，把想法變成可觸及的體驗。
               </p>
@@ -189,10 +214,28 @@
 
         <div class="filter-chips reveal" aria-label="快速篩選">
           <a class="chip is-active" href="#hero">全部</a>
+          <a class="chip" href="#map">地圖</a>
           <a class="chip" href="#projects">作品</a>
           <a class="chip" href="#skills">技能</a>
           <a class="chip" href="#experience">經歷</a>
         </div>
+
+        <section id="map" class="section section-map" data-section="map">
+          <div class="content-wrap">
+            <header class="section-header reveal">
+              <h2>位置</h2>
+              <p class="section-lead">
+                使用 Leaflet.js 與 OpenStreetMap 顯示互動地圖，標記台北 101 所在地。
+              </p>
+            </header>
+            <div
+              id="map-container"
+              class="map-container reveal"
+              role="application"
+              aria-label="台北 101 互動式地圖"
+            ></div>
+          </div>
+        </section>
 
         <section id="about" class="section section-about" data-section="about">
           <div class="content-wrap">
@@ -443,6 +486,9 @@
                 <a href="mailto:hello@example.com">Email</a>
               </li>
             </ul>
+            <p class="visitor-count" id="visitor-count" aria-live="polite">
+              <small>本網站累計瀏覽 <span id="visit-number">—</span> 次</small>
+            </p>
             <p class="copyright">
               <small
                 >&copy; <span id="year"></span> 你的名字. 保留所有權利。</small
@@ -452,5 +498,17 @@
         </footer>
       </main>
     </div>
+
+    <button
+      type="button"
+      class="back-to-top"
+      id="back-to-top"
+      aria-label="回到頂部"
+      hidden
+    >
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
+      </svg>
+    </button>
   </body>
 </html>
